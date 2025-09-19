@@ -1,0 +1,11 @@
+services:
+  kuzco-main:
+    # Pin DNS host NATS ke IP yang terbukti OK dari hasil diag-net.sh
+    extra_hosts:
+      - "nc.devnet.inference.net:3.17.83.197"
+      - "nc-logs.devnet.inference.net:3.17.83.197"
+
+    # Opsional: kalau belum ada di base
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN

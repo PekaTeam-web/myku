@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  kuzco-main:
+    build: .
+    image: kuzco-main:novita
+    container_name: kuzco-main
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Boleh atur prioritas endpoint Novita (opsional, tapi bagus):
+      - NOVITA_OPENAI_ENDPOINTS=https://api.novita.ai/v3/openai/chat/completions;https://api.novita.ai/openai/v1/chat/completions;https://api.novita.ai/v1/chat/completions
+      # Aktifkan loop keepalive (sementara, sampai health-test lolos)
+      - KEEPALIVE=1
+    ports:
+      - "14000:14000"
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:14000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
